@@ -12,5 +12,6 @@ namespace censudex_inventory_service_api.src.Dto
         public string category { get; set; }
         public int stock { get; set; }
         public bool is_Active { get; set; }
+        public int minimum_stock { get; set; }
     }
 }

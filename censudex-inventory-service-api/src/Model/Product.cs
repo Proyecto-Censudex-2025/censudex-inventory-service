@@ -21,5 +21,7 @@ namespace censudex_inventory_service_api.src.Model
         public int stock { get; set; }
         [Column("is_active")]
         public bool is_active { get; set; }
+        [Column("minimum_stock")]
+        public int minimum_stock { get; set; }
     }
 }

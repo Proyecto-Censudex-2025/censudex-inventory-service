@@ -30,22 +30,23 @@ namespace censudex_inventory_service_api.src.Repository
             var results = await supabase.From<Product>().Where(p => p.id == id).Single();
             return results;
         }
-
-        public async Task UpdateStock(Guid productId, int quantity)
+        public async Task UpdateStock(Guid productId, int newStock)
         {
-            var product = await supabase.From<Product>().Where(p => p.id == productId).Single();
-            if (product == null)
+            var product = await GetProductById(productId);
+            if (product != null)
             {
-                throw new ArgumentException("Producto no encontrado");
+                product.stock = newStock;
+                await supabase.From<Product>().Update(product);
             }
-            await supabase.From<Product>().Update(new Product
+        }
+        public async Task UpdateMinimumStock(Guid productId, int minimumStock)
+        {
+            var product = await GetProductById(productId);
+            if (product != null)
             {
-                id = product.id,
-                name = product.name,
-                category = product.category,
-                stock = quantity,
-                is_active = product.is_active
-            });
+                product.minimum_stock = minimumStock;
+                await supabase.From<Product>().Update(product);
+            }
         }
     }
 }

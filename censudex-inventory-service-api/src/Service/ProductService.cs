@@ -42,15 +42,52 @@ namespace censudex_inventory_service_api.src.Service
             var productDto = product.Result != null ? ProductMapper.ToDto(product.Result) : null;
             return Task.FromResult(productDto);
         }
-
-        public Task UpdateStock(Guid productId, int quantity)
+        public async Task IncrementStock(Guid productId, int amount)
         {
-            if (quantity < 0)
+            if (amount < 0)
             {
-                throw new ArgumentException("La cantidad debe ser un valor positivo");
+                throw new ArgumentException("La cantidad a incrementar debe ser un valor positivo y diferente de 0");
             }
-            
-            return productRepository.UpdateStock(productId, quantity);
+            var product = await productRepository.GetProductById(productId);
+            if (product == null)
+            {
+                throw new ArgumentException("Producto no encontrado");
+            }
+            product.stock += amount;
+            await productRepository.UpdateStock(productId, product.stock);
+        }
+        public async Task DecrementStock(Guid productId, int amount)
+        {
+            if (amount < 0)
+            {
+                throw new ArgumentException("La cantidad a decrementar debe ser un valor positivo y diferente de 0");
+            }
+            var product = await productRepository.GetProductById(productId);
+            if (product == null)
+            {
+                throw new ArgumentException("Producto no encontrado");
+            }
+            product.stock -= amount;
+            if (product.stock < 0)
+            {
+                throw new InvalidOperationException("No quedan suficientes unidades en stock");
+            }
+            //TODO ENVIAR ALERTA DE UMBRAL MINIMO
+            await productRepository.UpdateStock(productId, product.stock);
+        }
+        public async Task SetMinimumStock(Guid productId, int minimumStock)
+        {
+            if (minimumStock < 0)
+            {
+                throw new ArgumentException("El stock minimo debe ser un valor positivo y diferente de 0");
+            }
+            var product = await productRepository.GetProductById(productId);
+            if (product == null)
+            {
+                throw new ArgumentException("Producto no encontrado");
+            }
+            product.minimum_stock = minimumStock;
+            await productRepository.UpdateMinimumStock(productId, product.minimum_stock);
         }
     }
 }

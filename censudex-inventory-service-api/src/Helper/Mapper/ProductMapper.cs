@@ -16,7 +16,9 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
                 name = product.name,
                 category = product.category,
                 stock = product.stock,
-                is_Active = product.is_active
+                is_Active = product.is_active,
+                minimum_stock = product.minimum_stock 
+
             };
         }
         public static Model.Product ToModel(ProductDto productDto)
@@ -27,7 +29,8 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
                 name = productDto.name,
                 category = productDto.category,
                 stock = productDto.stock,
-                is_active = productDto.is_Active
+                is_active = productDto.is_Active,
+                minimum_stock = productDto.minimum_stock
             };
         }
     }
