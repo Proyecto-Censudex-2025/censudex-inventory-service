@@ -54,6 +54,10 @@ namespace censudex_inventory_service_api.src.Service
                 throw new ArgumentException("Producto no encontrado");
             }
             product.stock += amount;
+            if (product.stock > product.minimum_stock)
+            {
+                //TODO ENVIAR ALERTA DE UMBRAL MINIMO SUPERADO
+            }
             await productRepository.UpdateStock(productId, product.stock);
         }
         public async Task DecrementStock(Guid productId, int amount)
@@ -72,7 +76,10 @@ namespace censudex_inventory_service_api.src.Service
             {
                 throw new InvalidOperationException("No quedan suficientes unidades en stock");
             }
-            //TODO ENVIAR ALERTA DE UMBRAL MINIMO
+            if (product.stock <= product.minimum_stock)
+            {
+                //TODO ENVIAR ALERTA DE UMBRAL MINIMO NO SUPERADO
+            }
             await productRepository.UpdateStock(productId, product.stock);
         }
         public async Task SetMinimumStock(Guid productId, int minimumStock)
@@ -89,5 +96,6 @@ namespace censudex_inventory_service_api.src.Service
             product.minimum_stock = minimumStock;
             await productRepository.UpdateMinimumStock(productId, product.minimum_stock);
         }
+
     }
 }

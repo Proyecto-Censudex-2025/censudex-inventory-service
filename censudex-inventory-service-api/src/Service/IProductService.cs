@@ -14,5 +14,6 @@ namespace censudex_inventory_service_api.src.Service
         public Task IncrementStock(Guid productId, int amount);
         public Task DecrementStock(Guid productId, int amount);
         public Task SetMinimumStock(Guid productId, int minimumStock);
+        //TODO ALERTA DE UMBRAL MINIMO SUPERADO/NO ALCANZADO mediante un bool
     }
 }
