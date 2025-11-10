@@ -44,7 +44,7 @@ namespace censudex_inventory_service_api.src.Service
         }
         public async Task IncrementStock(Guid productId, int amount)
         {
-            if (amount < 0)
+            if (amount <= 0)
             {
                 throw new ArgumentException("La cantidad a incrementar debe ser un valor positivo y diferente de 0");
             }
@@ -62,7 +62,7 @@ namespace censudex_inventory_service_api.src.Service
         }
         public async Task DecrementStock(Guid productId, int amount)
         {
-            if (amount < 0)
+            if (amount <= 0)
             {
                 throw new ArgumentException("La cantidad a decrementar debe ser un valor positivo y diferente de 0");
             }

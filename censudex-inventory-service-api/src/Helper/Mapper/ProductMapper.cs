@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using censudex_inventory_service_api.src.Dto;
+using censudex_inventory_service_api.src.Model;
 
 namespace censudex_inventory_service_api.src.Helper.Mapper
 {
     public class ProductMapper
     {
-        public static ProductDto ToDto(Model.Product product)
+        public static ProductDto ToDto(Product product)
         {
             return new ProductDto
             {
@@ -21,9 +22,9 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
 
             };
         }
-        public static Model.Product ToModel(ProductDto productDto)
+        public static Product ToModel(ProductDto productDto)
         {
-            return new Model.Product
+            return new Product
             {
                 id = productDto.id,
                 name = productDto.name,

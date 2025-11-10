@@ -11,7 +11,7 @@ namespace censudex_inventory_service_api.src.Model
     [Table("Product")]
     public class Product : BaseModel
     {
-        [PrimaryKey("id")]
+        [PrimaryKey("id",true)]
         public Guid id { get; set; }
         [Column("name")]
         public string name { get; set; }
