@@ -1,17 +1,18 @@
-using censudex_inventory_service_api.src.Data;
 using DotNetEnv;
-using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 Env.Load();
-var connectionString = Environment.GetEnvironmentVariable("SUPABASE_CONNECTION_STRING");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString)
-);
+var url = Environment.GetEnvironmentVariable("SUPABASE_URL");
+var key = Environment.GetEnvironmentVariable("SUPABASE_KEY");
 
+var options = new Supabase.SupabaseOptions
+{
+    AutoConnectRealtime = true
+};
+
+var supabase = new Supabase.Client(url, key, options);
+await supabase.InitializeAsync();
 builder.Services.AddControllers();
-
 var app = builder.Build();
 
 app.UseHttpsRedirection();

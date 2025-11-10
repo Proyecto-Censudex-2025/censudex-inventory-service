@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 
 namespace censudex_inventory_service_api.src.Model
 {
-    public class Product
+    [Table("Product")]
+    public class Product : BaseModel
     {
-        [Key]
+        [PrimaryKey("id")]
         public Guid id { get; set; }
-        [Required]  
+        [Column("name")]
         public string name { get; set; }
-        [Required]
+        [Column("category")]
         public string category { get; set; }
-        [Required]
+        [Column("stock")]
         public int stock { get; set; }
-        [Required]
+        [Column("is_active")]
         public bool is_active { get; set; }
     }
 }
