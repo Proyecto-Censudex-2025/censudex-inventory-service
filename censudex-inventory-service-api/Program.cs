@@ -12,6 +12,7 @@ var options = new Supabase.SupabaseOptions
 
 var supabase = new Supabase.Client(url, key, options);
 await supabase.InitializeAsync();
+
 builder.Services.AddControllers();
 var app = builder.Build();
 
