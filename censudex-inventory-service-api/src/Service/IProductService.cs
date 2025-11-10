@@ -9,7 +9,7 @@ namespace censudex_inventory_service_api.src.Service
     public interface IProductService
     {
         public Task AddProduct(ProductDto productDto);
-        public Task<IEnumerable<ProductDto>?> GetAllProducts();
+        public Task<IEnumerable<ProductDto?>> GetAllProducts();
         public Task<ProductDto?> GetProductById(Guid id);
         public Task IncrementStock(Guid productId, int amount);
         public Task DecrementStock(Guid productId, int amount);

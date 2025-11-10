@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using censudex_inventory_service_api.src.Dto;
 using censudex_inventory_service_api.src.Repository;
 using censudex_inventory_service_api.src.Helper.Mapper;
+using censudex_inventory_service_api.src.Helper.Exception;
 namespace censudex_inventory_service_api.src.Service
 {
     public class ProductService : IProductService
@@ -19,26 +20,38 @@ namespace censudex_inventory_service_api.src.Service
         {
             if (productDto == null)
             {
-                throw new ArgumentNullException(nameof(productDto));
+                throw new ArgumentNullException("The product cannot be null");
             }
             if (productDto.stock < 0)
             {
-                throw new ArgumentException("El Stock debe ser un valor positivo");
+                throw new ArgumentException("The stock must be a positive value");
             }
             var product = ProductMapper.ToModel(productDto);
             return productRepository.AddProduct(product);
         }
 
-        public Task<IEnumerable<ProductDto>?> GetAllProducts()
+        public Task<IEnumerable<ProductDto?>> GetAllProducts()
         {
             var products = productRepository.GetAllProducts();
             var productDtos = products.Result?.Select(p => ProductMapper.ToDto(p));
-            return Task.FromResult(productDtos);
+            if (productDtos == null)
+            {
+                throw new ProductNotFoundException("No products found");
+            }
+            return Task.FromResult<IEnumerable<ProductDto?>>(productDtos);
         }
 
         public Task<ProductDto?> GetProductById(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("The product ID cannot be empty");
+            }
             var product = productRepository.GetProductById(id);
+            if (product == null)
+            {
+                throw new ProductNotFoundException("Product not found");
+            }
             var productDto = product.Result != null ? ProductMapper.ToDto(product.Result) : null;
             return Task.FromResult(productDto);
         }
@@ -46,12 +59,12 @@ namespace censudex_inventory_service_api.src.Service
         {
             if (amount <= 0)
             {
-                throw new ArgumentException("La cantidad a incrementar debe ser un valor positivo y diferente de 0");
+                throw new ArgumentException("The amount to increment must be a positive value and different from 0");
             }
             var product = await productRepository.GetProductById(productId);
             if (product == null)
             {
-                throw new ArgumentException("Producto no encontrado");
+                throw new ProductNotFoundException("Product not found");
             }
             product.stock += amount;
             if (product.stock > product.minimum_stock)
@@ -64,17 +77,17 @@ namespace censudex_inventory_service_api.src.Service
         {
             if (amount <= 0)
             {
-                throw new ArgumentException("La cantidad a decrementar debe ser un valor positivo y diferente de 0");
+                throw new ArgumentException("The amount to decrement must be a positive value and different from 0");
             }
             var product = await productRepository.GetProductById(productId);
             if (product == null)
             {
-                throw new ArgumentException("Producto no encontrado");
+                throw new ProductNotFoundException("Product not found");
             }
             product.stock -= amount;
             if (product.stock < 0)
             {
-                throw new InvalidOperationException("No quedan suficientes unidades en stock");
+                throw new InvalidOperationException("Insufficient stock available");
             }
             if (product.stock <= product.minimum_stock)
             {
@@ -86,12 +99,12 @@ namespace censudex_inventory_service_api.src.Service
         {
             if (minimumStock < 0)
             {
-                throw new ArgumentException("El stock minimo debe ser un valor positivo y diferente de 0");
+                throw new ArgumentException("The minimum stock must be a positive value and different from 0");
             }
             var product = await productRepository.GetProductById(productId);
             if (product == null)
             {
-                throw new ArgumentException("Producto no encontrado");
+                throw new ProductNotFoundException("Product not found");
             }
             product.minimum_stock = minimumStock;
             await productRepository.UpdateMinimumStock(productId, product.minimum_stock);

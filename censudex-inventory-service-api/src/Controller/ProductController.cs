@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using censudex_inventory_service_api.src.Helper.Exception;
 using censudex_inventory_service_api.src.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace censudex_inventory_service_api.src.Controller
 {
@@ -28,8 +30,11 @@ namespace censudex_inventory_service_api.src.Controller
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error in GetAllProducts: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                if (ex is ProductNotFoundException)
+                {
+                    return StatusCode(404, new { ex.Message });
+                }
+                return StatusCode(500, "An error occurred while retrieving products");
             }
         }
         [HttpGet("{id}")]
@@ -40,14 +45,24 @@ namespace censudex_inventory_service_api.src.Controller
                 var product = await productService.GetProductById(id);
                 if (product == null)
                 {
-                    return NotFound();
+                    return StatusCode(404, new { Message = "Product not found" });
                 }
                 return Ok(product);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error in GetProductById: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                if (ex is ProductNotFoundException)
+                {
+                    return StatusCode(404, new { ex.Message });
+                }
+                else if (ex is ArgumentException)
+                {
+                    return BadRequest(new { ex.Message });
+                }
+                else
+                {
+                    return StatusCode(500, "An error occurred while retrieving the product");
+                }
             }
         }
         [HttpPost]
@@ -55,23 +70,33 @@ namespace censudex_inventory_service_api.src.Controller
         {
             try
             {
+                if (productDto == null)
+                {
+                    return StatusCode(400, new { Message = "Product data is required" });
+                }
+                if (string.IsNullOrEmpty(productDto.name) || string.IsNullOrEmpty(productDto.category) ||
+                    string.IsNullOrEmpty(productDto.id.ToString()) || string.IsNullOrEmpty(productDto.stock.ToString()) ||
+                    string.IsNullOrEmpty(productDto.minimum_stock.ToString()) || string.IsNullOrEmpty(productDto.is_Active.ToString()))
+                {
+                    return StatusCode(400, new { Message = "All product fields must be provided" });
+                }
                 await productService.AddProduct(productDto);
                 return CreatedAtAction(nameof(GetProductById), new { id = productDto.id }, productDto);
             }
-            catch (ArgumentNullException ex)
-            {
-                Debug.WriteLine($"Error in AddProduct: {ex.Message}");
-                return BadRequest("Product data is null");
-            }
-            catch (ArgumentException ex)
-            {
-                Debug.WriteLine($"Error in AddProduct: {ex.Message}");
-                return BadRequest(ex.Message);
-            }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error in AddProduct: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                if (ex is ArgumentException)
+                {
+                    return BadRequest(new { ex.Message });
+                }
+                else if (ex is ArgumentNullException)
+                {
+                    return BadRequest(new { ex.Message });
+                }
+                else
+                {
+                    return StatusCode(500, new { Message = "An error occurred while adding the product" });
+                }
             }
         }
         [HttpPost("{id}/incrementStock")]
