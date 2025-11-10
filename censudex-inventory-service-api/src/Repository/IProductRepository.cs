@@ -11,6 +11,6 @@ namespace censudex_inventory_service_api.src.Repository
         Task<IEnumerable<Product>?> GetAllProducts();
         Task<Product?> GetProductById(Guid id);
         Task AddProduct(Product product);
-        Task UpdateStock(Product product, int quantity);
+        Task UpdateStock(Guid productId, int quantity);
     }
 }
