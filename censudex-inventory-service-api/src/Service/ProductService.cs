@@ -55,46 +55,6 @@ namespace censudex_inventory_service_api.src.Service
             var productDto = product.Result != null ? ProductMapper.ToDto(product.Result) : null;
             return Task.FromResult(productDto);
         }
-        public async Task IncrementStock(Guid productId, int amount)
-        {
-            if (amount <= 0)
-            {
-                throw new ArgumentException("The amount to increment must be a positive value and different from 0");
-            }
-            var product = await productRepository.GetProductById(productId);
-            if (product == null)
-            {
-                throw new ProductNotFoundException("Product not found");
-            }
-            product.stock += amount;
-            if (product.stock > product.minimum_stock)
-            {
-                //TODO ENVIAR ALERTA DE UMBRAL MINIMO SUPERADO
-            }
-            await productRepository.UpdateStock(productId, product.stock);
-        }
-        public async Task DecrementStock(Guid productId, int amount)
-        {
-            if (amount <= 0)
-            {
-                throw new ArgumentException("The amount to decrement must be a positive value and different from 0");
-            }
-            var product = await productRepository.GetProductById(productId);
-            if (product == null)
-            {
-                throw new ProductNotFoundException("Product not found");
-            }
-            product.stock -= amount;
-            if (product.stock < 0)
-            {
-                throw new InvalidOperationException("Insufficient stock available");
-            }
-            if (product.stock <= product.minimum_stock)
-            {
-                //TODO ENVIAR ALERTA DE UMBRAL MINIMO NO SUPERADO
-            }
-            await productRepository.UpdateStock(productId, product.stock);
-        }
         public async Task SetMinimumStock(Guid productId, int minimumStock)
         {
             if (minimumStock < 0)
@@ -109,6 +69,34 @@ namespace censudex_inventory_service_api.src.Service
             product.minimum_stock = minimumStock;
             await productRepository.UpdateMinimumStock(productId, product.minimum_stock);
         }
+        public async Task UpdateStock (Guid productId, int amount)
+        {
+            if (amount == 0)
+            {
+                throw new ArgumentException("The amount to update must be different from 0");
+            }
 
+            var product = await productRepository.GetProductById(productId);
+            if (product == null)
+            {
+                throw new ProductNotFoundException("Product not found");
+            }
+
+            product.stock += amount;
+
+            if (product.stock < 0)
+            {
+                throw new InvalidOperationException("Insufficient stock available");
+            }
+            if (product.stock <= product.minimum_stock)
+            {
+                //TODO ENVIAR ALERTA DE UMBRAL MINIMO NO SUPERADO
+            }
+            if (product.stock > product.minimum_stock)
+            {
+                //TODO ENVIAR ALERTA DE UMBRAL MINIMO SUPERADO
+            }
+            await productRepository.UpdateStock(productId, product.stock);
+        }
     }
 }

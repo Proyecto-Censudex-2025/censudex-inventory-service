@@ -98,37 +98,13 @@ namespace censudex_inventory_service_api.src.Controller
                 }
             }
         }
-        [HttpPost("{id}/incrementStock")]
-        public async Task<IActionResult> IncrementStock(Guid id, [FromQuery] int amount)
+        [HttpPost("{id}/updateStock")]
+        public async Task<IActionResult> UpdateStock(Guid id, [FromQuery] int amount)
         {
             try
             {
-                await productService.IncrementStock(id, amount);
-                return Ok("Stock incremented successfully by " + amount);
-            }
-            catch (Exception ex)
-            {
-                if (ex is ArgumentException)
-                {
-                    return BadRequest(new { ex.Message });
-                }
-                else if (ex is ProductNotFoundException)
-                {
-                    return StatusCode(404, new { ex.Message });
-                }
-                else
-                {
-                    return StatusCode(500, new { Message = "An error occurred while incrementing the stock" });
-                }
-            }
-        }
-        [HttpPost("{id}/decrementStock")]
-        public async Task<IActionResult> DecrementStock(Guid id, [FromQuery] int amount)
-        {
-            try
-            {
-                await productService.DecrementStock(id, amount);
-                return Ok("Stock decremented successfully by " + amount);
+                await productService.UpdateStock(id, amount);
+                return Ok("Stock updated successfully by " + Math.Abs(amount));
             }
             catch (Exception ex)
             {
@@ -146,7 +122,7 @@ namespace censudex_inventory_service_api.src.Controller
                 }
                 else
                 {
-                    return StatusCode(500, new { Message = "An error occurred while decrementing the stock" });
+                    return StatusCode(500, new { Message = "An error occurred while updating the stock" });
                 }
             }
         }
