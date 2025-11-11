@@ -10,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace censudex_inventory_service_api.src.Controller
 {
-    //TODO Mensajes de excepción
     [ApiController]
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
@@ -105,17 +104,22 @@ namespace censudex_inventory_service_api.src.Controller
             try
             {
                 await productService.IncrementStock(id, amount);
-                return NoContent();
-            }
-            catch (ArgumentException ex)
-            {
-                Debug.WriteLine($"Error in IncrementStock: {ex.Message}");
-                return BadRequest(ex.Message);
+                return Ok("Stock incremented successfully by " + amount);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error in IncrementStock: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                if (ex is ArgumentException)
+                {
+                    return BadRequest(new { ex.Message });
+                }
+                else if (ex is ProductNotFoundException)
+                {
+                    return StatusCode(404, new { ex.Message });
+                }
+                else
+                {
+                    return StatusCode(500, new { Message = "An error occurred while incrementing the stock" });
+                }
             }
         }
         [HttpPost("{id}/decrementStock")]
@@ -124,17 +128,26 @@ namespace censudex_inventory_service_api.src.Controller
             try
             {
                 await productService.DecrementStock(id, amount);
-                return NoContent();
-            }
-            catch (ArgumentException ex)
-            {
-                Debug.WriteLine($"Error in DecrementStock: {ex.Message}");
-                return BadRequest(ex.Message);
+                return Ok("Stock decremented successfully by " + amount);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error in DecrementStock: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                if (ex is ArgumentException)
+                {
+                    return BadRequest(new { ex.Message });
+                }
+                else if (ex is ProductNotFoundException)
+                {
+                    return StatusCode(404, new { ex.Message });
+                }
+                else if (ex is InvalidOperationException)
+                {
+                    return BadRequest(new { ex.Message });
+                }
+                else
+                {
+                    return StatusCode(500, new { Message = "An error occurred while decrementing the stock" });
+                }
             }
         }
         [HttpPost("{id}/setMinimumStock")]
@@ -143,17 +156,23 @@ namespace censudex_inventory_service_api.src.Controller
             try
             {
                 await productService.SetMinimumStock(id, minimumStock);
-                return NoContent();
+                return Ok("Minimum stock set successfully to " + minimumStock);
             }
-            catch (ArgumentException ex)
-            {
-                Debug.WriteLine($"Error in SetMinimumStock: {ex.Message}");
-                return BadRequest(ex.Message);
-            }
+
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error in SetMinimumStock: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                if (ex is ArgumentException)
+                {
+                    return BadRequest(new { ex.Message });
+                }
+                else if (ex is ProductNotFoundException)
+                {
+                    return StatusCode(404, new { ex.Message });
+                }
+                else
+                {
+                    return StatusCode(500, new { Message = "An error occurred while setting the minimum stock" });
+                }
             }
         }
     }
