@@ -98,7 +98,7 @@ namespace censudex_inventory_service_api.src.Controller
                 }
             }
         }
-        [HttpPost("{id}/updateStock")]
+        [HttpPatch("{id}/stock")]
         public async Task<IActionResult> UpdateStock(Guid id, [FromQuery] int amount)
         {
             try
@@ -126,7 +126,7 @@ namespace censudex_inventory_service_api.src.Controller
                 }
             }
         }
-        [HttpPost("{id}/setMinimumStock")]
+        [HttpPatch("{id}/minStock")]
         public async Task<IActionResult> SetMinimumStock(Guid id, [FromQuery] int minimumStock)
         {
             try
