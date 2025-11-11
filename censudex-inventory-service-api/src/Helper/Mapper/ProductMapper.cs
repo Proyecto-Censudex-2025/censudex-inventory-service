@@ -34,5 +34,16 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
                 minimum_stock = productDto.minimum_stock
             };
         }
+
+        public static getProductDto toVisualizer(Product product)
+        {
+            return new getProductDto
+            {
+                name = product.name,
+                stock = product.stock,
+                minimum_stock = product.minimum_stock,
+                is_Active = product.is_active
+            };
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace censudex_inventory_service_api.src.Service
             return Task.FromResult<IEnumerable<ProductDto?>>(productDtos);
         }
 
-        public Task<ProductDto?> GetProductById(Guid id)
+        public Task<getProductDto?> GetProductById(Guid id)
         {
             if (id == Guid.Empty)
             {
@@ -52,12 +52,12 @@ namespace censudex_inventory_service_api.src.Service
             {
                 throw new ProductNotFoundException("Product not found");
             }
-            var productDto = product.Result != null ? ProductMapper.ToDto(product.Result) : null;
-            return Task.FromResult(productDto);
+            var productVisualizer = ProductMapper.toVisualizer(product.Result);
+            return Task.FromResult<getProductDto?>(productVisualizer);
         }
         public async Task SetMinimumStock(Guid productId, int minimumStock)
         {
-            if (minimumStock < 0)
+            if (minimumStock <= 0)
             {
                 throw new ArgumentException("The minimum stock must be a positive value and different from 0");
             }

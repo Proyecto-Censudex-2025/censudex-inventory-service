@@ -10,7 +10,7 @@ namespace censudex_inventory_service_api.src.Service
     {
         public Task AddProduct(ProductDto productDto);
         public Task<IEnumerable<ProductDto?>> GetAllProducts();
-        public Task<ProductDto?> GetProductById(Guid id);
+        public Task<getProductDto?> GetProductById(Guid id);
         public Task UpdateStock(Guid productId, int amount);
         public Task SetMinimumStock(Guid productId, int minimumStock);
         //TODO ALERTA DE UMBRAL MINIMO SUPERADO/NO ALCANZADO mediante un bool
