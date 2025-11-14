@@ -29,6 +29,10 @@ namespace censudex_inventory_service_api.src.Controller
             {
                 throw new RpcException(new Status(StatusCode.InvalidArgument, ex.Message));
             }
+            catch (ArgumentException ex)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, ex.Message));
+            }
             catch (Exception ex)
             {
                 throw new RpcException(new Status(StatusCode.Internal, ex.Message));
