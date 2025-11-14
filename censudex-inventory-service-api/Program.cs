@@ -1,3 +1,4 @@
+using censudex_inventory_service_api.src.Controller;
 using censudex_inventory_service_api.src.Repository;
 using censudex_inventory_service_api.src.Service;
 using DotNetEnv;
@@ -11,27 +12,22 @@ var options = new Supabase.SupabaseOptions
 {
     AutoConnectRealtime = true
 };
-
 var supabase = new Supabase.Client(url, key, options);
 await supabase.InitializeAsync();
 
 builder.Services.AddSingleton<Supabase.Client>(supabase);
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddControllers();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddGrpc();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
+
 app.UseHttpsRedirection();
-app.MapControllers();
+app.MapGrpcService<ProductGrpcService>();
 
 app.Run();
 

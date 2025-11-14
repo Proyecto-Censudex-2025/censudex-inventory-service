@@ -41,19 +41,19 @@ namespace censudex_inventory_service_api.src.Service
             return Task.FromResult<IEnumerable<ProductDto?>>(productDtos);
         }
 
-        public Task<getProductDto?> GetProductById(Guid id)
+        public async Task<getProductDto?> GetProductById(Guid id)
         {
             if (id == Guid.Empty)
             {
                 throw new ArgumentException("The product ID cannot be empty");
             }
-            var product = productRepository.GetProductById(id);
+            var product = await productRepository.GetProductById(id);
             if (product == null)
             {
                 throw new ProductNotFoundException("Product not found");
             }
-            var productVisualizer = ProductMapper.toVisualizer(product.Result);
-            return Task.FromResult<getProductDto?>(productVisualizer);
+            var productVisualizer = ProductMapper.toVisualizer(product);
+            return productVisualizer;
         }
         public async Task SetMinimumStock(Guid productId, int minimumStock)
         {

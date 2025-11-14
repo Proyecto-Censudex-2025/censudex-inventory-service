@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+option csharp_namespace = "InventoryService.Grpc";
+
+import "google/protobuf/empty.proto";
+
+package Inventory;
+
+service Inventory {
+  rpc AddProduct (AddProductRequest) returns (google.protobuf.Empty);
+  
+  rpc GetAllProducts (google.protobuf.Empty) returns (GetAllProductsResponse);
+  
+  rpc GetProductById (GetProductByIdRequest) returns (GetProductByIdResponse);
+  
+  rpc UpdateStock (UpdateStockRequest) returns (google.protobuf.Empty);
+  
+  rpc SetMinimumStock (SetMinimumStockRequest) returns (google.protobuf.Empty);
+}
+
+message ProductMessage {
+    string id = 1; // Guid en C# se mapea a string en Protobuf
+    string name = 2;
+    string category = 3;
+    int32 stock = 4;
+    bool is_active = 5;
+    int32 minimum_stock = 6;
+}
+
+message ProductVisualizerMessage {
+    string name = 1;
+    int32 stock = 2;
+    int32 minimum_stock = 3;
+    bool is_active = 4;
+}
+
+message AddProductRequest {
+    ProductMessage product = 1;
+}
+
+message GetAllProductsResponse {
+    repeated ProductMessage products = 1;
+}
+
+message GetProductByIdRequest {
+    string product_id = 1;
+}
+
+message GetProductByIdResponse {
+    ProductVisualizerMessage product = 1;
+}
+
+message UpdateStockRequest {
+    string product_id = 1;
+    int32 amount = 2;
+}
+
+message SetMinimumStockRequest {
+    string product_id = 1;
+    int32 minimum_stock = 2;
+}
