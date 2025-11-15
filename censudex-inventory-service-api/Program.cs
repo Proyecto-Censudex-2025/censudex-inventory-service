@@ -1,3 +1,4 @@
+using censudex_inventory_service_api.src.Consumer;
 using censudex_inventory_service_api.src.Controller;
 using censudex_inventory_service_api.src.Messages;
 using censudex_inventory_service_api.src.Repository;
@@ -21,15 +22,19 @@ builder.Services.AddSingleton<Supabase.Client>(supabase);
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddGrpc();
-
 builder.Services.AddMassTransit(x =>
-{
+    {
+    x.AddConsumer<OrderCreatedConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("localhost", "/", h =>
         {
             h.Username("guest");
             h.Password("guest");
+        });
+        cfg.ReceiveEndpoint("order-created-queue", e =>
+        {
+            e.ConfigureConsumer<OrderCreatedConsumer>(context);
         });
         cfg.Send<OrderFailedStockMessage>(e =>
         {
