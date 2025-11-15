@@ -55,7 +55,6 @@ builder.Services.AddMassTransit(x =>
 });
 var app = builder.Build();
 if (app.Environment.IsDevelopment()) {}
-app.UseHttpsRedirection();
 app.MapGrpcService<ProductGrpcService>();
 
 app.Run();
