@@ -36,9 +36,9 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
             };
         }
 
-        public static getProductDto toVisualizer(Product product)
+        public static ProductVisualizerDto toVisualizer(Product product)
         {
-            return new getProductDto
+            return new ProductVisualizerDto
             {
                 name = product.name,
                 stock = product.stock,
@@ -70,7 +70,7 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
                 MinimumStock = productDto.minimum_stock
             };
         }
-        public static ProductVisualizerMessage toVisualizerMessage(getProductDto product)
+        public static ProductVisualizerMessage toVisualizerMessage(ProductVisualizerDto product)
         {
             return new ProductVisualizerMessage
             {

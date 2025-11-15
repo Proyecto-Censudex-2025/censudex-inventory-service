@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace censudex_inventory_service_api.src.Dto
 {
-    public class getProductDto
+    public class ProductVisualizerDto
     {
         public string name { get; set; }
         public int stock { get; set; }

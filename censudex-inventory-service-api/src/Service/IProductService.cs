@@ -8,11 +8,10 @@ namespace censudex_inventory_service_api.src.Service
 {
     public interface IProductService
     {
-        public Task AddProduct(ProductDto productDto);
+        public Task<ProductDto> AddProduct(ProductDto productDto);
         public Task<IEnumerable<ProductDto?>> GetAllProducts();
-        public Task<getProductDto?> GetProductById(Guid id);
-        public Task UpdateStock(Guid productId, int amount);
-        public Task SetMinimumStock(Guid productId, int minimumStock);
-        //TODO ALERTA DE UMBRAL MINIMO SUPERADO/NO ALCANZADO mediante un bool
+        public Task<ProductVisualizerDto?> GetProductById(Guid id);
+        public Task<ProductVisualizerDto> UpdateStock(Guid productId, int amount);
+        public Task<ProductVisualizerDto> SetMinimumStock(Guid productId, int minimumStock);
     }
 }

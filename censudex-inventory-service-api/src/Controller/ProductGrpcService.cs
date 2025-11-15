@@ -17,13 +17,22 @@ namespace censudex_inventory_service_api.src.Controller
         {
             _productService = productService;
         }
-        public override async Task<Empty> AddProduct(AddProductRequest request, ServerCallContext context)
+        public override async Task<AddProductResponse> AddProduct(AddProductRequest request, ServerCallContext context)
         {
             try
             {
+                if (request.Product == null)
+                {
+                    throw new ArgumentNullException("The product cannot be null");
+                }
                 var productDto = ProductMapper.toDto(request.Product);
-                await _productService.AddProduct(productDto);
-                return new Empty();
+                var addedProduct = await _productService.AddProduct(productDto);
+                var response = new AddProductResponse
+                {
+                    Product = ProductMapper.toMessage(addedProduct),
+                    Message = "Product added successfully"
+                };
+                return response;
             }
             catch (ArgumentNullException ex)
             {
@@ -84,7 +93,7 @@ namespace censudex_inventory_service_api.src.Controller
                 throw new RpcException(new Status(StatusCode.Internal, "A unexpected error occurred while retrieving the product."));
             }
         }
-        public override async Task<Empty> UpdateStock(UpdateStockRequest request, ServerCallContext context)
+        public override async Task<UpdateStockResponse> UpdateStock(UpdateStockRequest request, ServerCallContext context)
         {
             try
             {
@@ -92,8 +101,13 @@ namespace censudex_inventory_service_api.src.Controller
                 {
                     throw new ArgumentException("Invalid product ID format.");
                 }
-                await _productService.UpdateStock(productId, request.Amount);
-                return new Empty();
+                var updatedProduct = await _productService.UpdateStock(productId, request.Amount);
+                var response = new UpdateStockResponse
+                {
+                    Product = ProductMapper.toVisualizerMessage(updatedProduct),
+                    Message = "Product stock updated successfully"
+                };
+                return response;
             }
             catch (ArgumentException ex)
             {
@@ -112,7 +126,7 @@ namespace censudex_inventory_service_api.src.Controller
                 throw new RpcException(new Status(StatusCode.Internal, "A unexpected error occurred while updating the product."));
             }
         }
-        public override async Task<Empty> SetMinimumStock(SetMinimumStockRequest request, ServerCallContext context)
+        public override async Task<SetMinimumStockResponse> SetMinimumStock(SetMinimumStockRequest request, ServerCallContext context)
         {
             try
             {
@@ -120,8 +134,13 @@ namespace censudex_inventory_service_api.src.Controller
                 {
                     throw new ArgumentException("Invalid product ID format.");
                 }
-                await _productService.SetMinimumStock(productId, request.MinimumStock);
-                return new Empty();
+                var updatedProduct = await _productService.SetMinimumStock(productId, request.MinimumStock);
+                var response = new SetMinimumStockResponse
+                {
+                    Product = ProductMapper.toVisualizerMessage(updatedProduct),
+                    Message = "Minimum stock set successfully"
+                };
+                return response;
             }
             catch (ArgumentException ex)
             {
