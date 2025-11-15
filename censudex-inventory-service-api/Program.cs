@@ -5,6 +5,7 @@ using censudex_inventory_service_api.src.Repository;
 using censudex_inventory_service_api.src.Service;
 using DotNetEnv;
 using MassTransit;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,13 @@ builder.Services.AddSingleton<Supabase.Client>(supabase);
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddGrpc();
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ConfigureEndpointDefaults(lo =>
+    {
+        lo.Protocols = HttpProtocols.Http2;
+    });
+});
 builder.Services.AddMassTransit(x =>
     {
     x.AddConsumer<OrderCreatedConsumer>();
