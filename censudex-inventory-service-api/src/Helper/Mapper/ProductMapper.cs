@@ -8,8 +8,16 @@ using InventoryService.Grpc;
 
 namespace censudex_inventory_service_api.src.Helper.Mapper
 {
+    /// <summary>
+    /// Clase encargada de mapear entre diferentes representaciones de productos.
+    /// </summary>
     public class ProductMapper
     {
+        /// <summary>
+        /// Convierte un modelo de producto a un DTO de producto.
+        /// </summary>
+        /// <param name="product">Producto a convertir.</param>
+        /// <returns>DTO del producto.</returns>
         public static ProductDto ToDto(Product product)
         {
             return new ProductDto
@@ -23,6 +31,11 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
 
             };
         }
+        /// <summary>
+        /// Convierte un DTO de producto a un modelo de producto.
+        /// </summary>
+        /// <param name="productDto">DTO de un producto a convertir.</param>
+        /// <returns>Modelo del producto.</returns>
         public static Product ToModel(ProductDto productDto)
         {
             return new Product
@@ -35,7 +48,11 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
                 minimum_stock = productDto.minimum_stock
             };
         }
-
+        /// <summary>
+        /// Convierte un modelo de producto a un DTO para visualización.
+        /// </summary>
+        /// <param name="product">Producto a convertir.</param>
+        /// <returns>DTO para visualización del producto.</returns>
         public static ProductVisualizerDto toVisualizer(Product product)
         {
             return new ProductVisualizerDto
@@ -46,6 +63,11 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
                 is_Active = product.is_active
             };
         }
+        /// <summary>
+        /// Convierte un mensaje de producto a un DTO de producto.
+        /// </summary>
+        /// <param name="productMessage">Mensaje gRPC de producto.</param>
+        /// <returns>DTO del producto.</returns>
         public static ProductDto toDto(ProductMessage productMessage)
         {
             return new ProductDto
@@ -58,6 +80,11 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
                 minimum_stock = productMessage.MinimumStock
             };
         }
+        /// <summary>
+        /// Convierte un DTO de producto a un mensaje gRPC de producto.
+        /// </summary>
+        /// <param name="productDto">DTO de producto.</param>
+        /// <returns>Mensaje gRPC de producto.</returns>
         public static ProductMessage toMessage(ProductDto productDto)
         {
             return new ProductMessage
@@ -70,6 +97,11 @@ namespace censudex_inventory_service_api.src.Helper.Mapper
                 MinimumStock = productDto.minimum_stock
             };
         }
+        /// <summary>
+        /// Convierte un DTO de visualización de producto a un mensaje gRPC de visualización de producto.
+        /// </summary>
+        /// <param name="product">DTO de visualización de producto.</param>
+        /// <returns>Mensaje gRPC de visualización de producto.</returns>
         public static ProductVisualizerMessage toVisualizerMessage(ProductVisualizerDto product)
         {
             return new ProductVisualizerMessage

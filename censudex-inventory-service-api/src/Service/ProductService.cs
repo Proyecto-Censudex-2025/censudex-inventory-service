@@ -10,10 +10,24 @@ using MassTransit;
 using censudex_inventory_service_api.src.Messages;
 namespace censudex_inventory_service_api.src.Service
 {
+    /// <summary>
+    /// Implementación del servicio de productos.
+    /// </summary>
     public class ProductService : IProductService
     {
+        /// <summary>
+        /// Repositorio de productos para operaciones de datos.
+        /// </summary>
         private readonly IProductRepository productRepository;
+        /// <summary>
+        /// Endpoint de publicación para enviar mensajes con RabbitMQ.
+        /// </summary>
         private readonly IPublishEndpoint _publishEndpoint;
+        /// <summary>
+        /// Constructor que inicializa el servicio con el repositorio y el endpoint de publicación.
+        /// </summary>
+        /// <param name="productRepository">Repositorio de productos.</param>
+        /// <param name="publishEndpoint">Endpoint de publicación para enviar mensajes con RabbitMQ.</param>
         public ProductService(IProductRepository productRepository, IPublishEndpoint publishEndpoint)
         {
             this.productRepository = productRepository;

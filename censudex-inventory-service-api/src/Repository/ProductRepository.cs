@@ -6,9 +6,19 @@ using censudex_inventory_service_api.src.Model;
 
 namespace censudex_inventory_service_api.src.Repository
 {
+    /// <summary>
+    /// Implementación del repositorio de productos.
+    /// </summary>
     public class ProductRepository : IProductRepository
     {
+        /// <summary>
+        /// Cliente de Supabase para operaciones de base de datos.
+        /// </summary>
         private readonly Supabase.Client supabase;
+        /// <summary>
+        /// Constructor que inicializa el repositorio con el cliente de Supabase.
+        /// </summary>
+        /// <param name="supabaseClient">Cliente de Supabase para operaciones de base de datos.</param>
         public ProductRepository(Supabase.Client supabaseClient)
         {
             supabase = supabaseClient;

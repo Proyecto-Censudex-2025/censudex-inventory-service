@@ -10,13 +10,29 @@ using Grpc.Core;
 using InventoryService.Grpc;
 namespace censudex_inventory_service_api.src.Controller
 {
+    /// <summary>
+    /// Controlador encargado de la gestión de productos a través de gRPC.
+    /// </summary>
     public class ProductGrpcService : Inventory.InventoryBase
     {
+        /// <summary>
+        /// Servicio de productos utilizado por el controlador.
+        /// </summary>
         private readonly IProductService _productService;
+        /// <summary>
+        /// Constructor del controlador de productos gRPC.
+        /// </summary>
+        /// <param name="productService"></param>
         public ProductGrpcService(IProductService productService)
         {
             _productService = productService;
         }
+        /// <summary>
+        /// Endpoint para agregar un nuevo producto al inventario.
+        /// </summary>
+        /// <param name="request">Solicitud con los datos del producto recibidos</param>
+        /// <param name="context"></param>
+        /// <returns>Retorna la respuesta con el producto agregado</returns>
         public override async Task<AddProductResponse> AddProduct(AddProductRequest request, ServerCallContext context)
         {
             try
@@ -47,6 +63,12 @@ namespace censudex_inventory_service_api.src.Controller
                 throw new RpcException(new Status(StatusCode.Internal, ex.Message));
             }
         }
+        /// <summary>
+        /// Endpoint para obtener todos los productos del inventario.
+        /// </summary>
+        /// <param name="request">Solicitud vacía</param>
+        /// <param name="context"></param>
+        /// <returns>Retorna la respuesta con la lista de productos</returns>
         public override async Task<GetAllProductsResponse> GetAllProducts(Empty request, ServerCallContext context)
         {
             try
@@ -65,6 +87,12 @@ namespace censudex_inventory_service_api.src.Controller
                 throw new RpcException(new Status(StatusCode.Internal, "A unexpected error occurred while retrieving products."));
             }
         }
+        /// <summary>
+        /// Endpoint para obtener un producto por su ID.
+        /// </summary>
+        /// <param name="request">Solicitud con el ID del producto</param>
+        /// <param name="context"></param>
+        /// <returns>Retorna la respuesta con el producto solicitado</returns>
         public override async Task<GetProductByIdResponse> GetProductById(GetProductByIdRequest request, ServerCallContext context)
         {
             try
@@ -93,6 +121,12 @@ namespace censudex_inventory_service_api.src.Controller
                 throw new RpcException(new Status(StatusCode.Internal, "A unexpected error occurred while retrieving the product."));
             }
         }
+        /// <summary>
+        /// Endpoint para actualizar el stock de un producto.
+        /// </summary>
+        /// <param name="request">Solicitud con el ID del producto y la cantidad a actualizar</param>
+        /// <param name="context"></param>
+        /// <returns>Retorna la respuesta con el producto actualizado</returns>
         public override async Task<UpdateStockResponse> UpdateStock(UpdateStockRequest request, ServerCallContext context)
         {
             try
@@ -126,6 +160,13 @@ namespace censudex_inventory_service_api.src.Controller
                 throw new RpcException(new Status(StatusCode.Internal, "A unexpected error occurred while updating the product."));
             }
         }
+        /// <summary>
+        /// Endpoint para establecer el stock mínimo de un producto.
+        /// </summary>
+        /// <param name="request">Solicitud con el ID del producto y el stock mínimo a establecer</param>
+        /// <param name="context"></param>
+        /// <returns>Retorna la respuesta con el producto actualizado</returns>
+        /// <exception cref="RpcException"></exception>
         public override async Task<SetMinimumStockResponse> SetMinimumStock(SetMinimumStockRequest request, ServerCallContext context)
         {
             try
