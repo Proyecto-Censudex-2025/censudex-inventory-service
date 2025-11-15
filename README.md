@@ -117,7 +117,7 @@ El servicio Inventory se expone a través de gRPC al API Gateway.
 
 6. **Ejecutar el Proyecto**
     ```bash
-    dotnet run
+    dotnet run --urls http://localhost:7004
     ```
     * El microservicio gRPC estará disponible para el API Gateway en el siguiente endpoint: **`https://localhost:7004`**.
 ### Ignacio Carvajal, 21.411.819-K
