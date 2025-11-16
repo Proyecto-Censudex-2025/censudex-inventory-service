@@ -147,7 +147,7 @@ namespace censudex_inventory_service_api.src.Service
             {
                 var orderFailedMessage = new OrderFailedStockMessage
                 {
-                    orderId = orderId.Value,
+                    orderId = orderId ?? Guid.Empty,
                     reason = "Insufficient stock",
                     errored = true,
                     reportedAt = DateTime.UtcNow

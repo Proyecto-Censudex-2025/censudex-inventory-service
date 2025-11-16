@@ -13,7 +13,7 @@ namespace censudex_inventory_service_api.src.Messages
         /// <summary>
         /// Identificador único de la orden.
         /// </summary>
-        public Guid orderId { get; set; }
+        public Guid? orderId { get; set; }
         /// <summary>
         /// Razón del fallo de stock.
         /// </summary>
