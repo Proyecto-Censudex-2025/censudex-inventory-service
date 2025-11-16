@@ -42,6 +42,8 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<OrderCreatedConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
+        cfg.Message<OrderFailedStockMessage>(m => m.SetEntityName("order.failed.stock"));
+        cfg.Message<StockLowMessage>(m => m.SetEntityName("stock.low"));
         cfg.Host("localhost", "/", h =>
         {
             h.Username("guest");
