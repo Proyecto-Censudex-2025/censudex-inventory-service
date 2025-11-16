@@ -135,7 +135,7 @@ namespace censudex_inventory_service_api.src.Controller
                 {
                     throw new ArgumentException("Invalid product ID format.");
                 }
-                var updatedProduct = await _productService.UpdateStock(productId, request.Amount);
+                var updatedProduct = await _productService.UpdateStock(productId, request.Amount, null);
                 var response = new UpdateStockResponse
                 {
                     Product = ProductMapper.toVisualizerMessage(updatedProduct),
