@@ -50,6 +50,8 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("order.created", e =>
         {
             e.ConfigureConsumer<OrderCreatedConsumer>(context);
+            e.ConfigureConsumeTopology = false;
+            e.UseRawJsonDeserializer();
         });
         cfg.Send<OrderFailedStockMessage>(e =>
         {
