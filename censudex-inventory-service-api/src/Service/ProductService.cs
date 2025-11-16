@@ -121,7 +121,7 @@ namespace censudex_inventory_service_api.src.Service
             var productVisualizer = ProductMapper.toVisualizer(product);
             return productVisualizer;
         }
-        public async Task<ProductVisualizerDto> UpdateStock (Guid productId, int amount)
+        public async Task<ProductVisualizerDto> UpdateStock (Guid productId, int amount, Guid? orderId)
         {
             if (productId == Guid.Empty)
             {
@@ -147,7 +147,7 @@ namespace censudex_inventory_service_api.src.Service
             {
                 var orderFailedMessage = new OrderFailedStockMessage
                 {
-                    orderId = product.id,
+                    orderId = orderId.Value,
                     reason = "Insufficient stock",
                     errored = true,
                     reportedAt = DateTime.UtcNow

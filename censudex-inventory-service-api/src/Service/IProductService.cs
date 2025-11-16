@@ -34,7 +34,7 @@ namespace censudex_inventory_service_api.src.Service
         /// <param name="productId">Identificador del producto a actualizar.</param>
         /// <param name="amount">Cantidad a incrementar o decrementar del stock.</param>
         /// <returns>Producto actualizado.</returns>
-        public Task<ProductVisualizerDto> UpdateStock(Guid productId, int amount);
+        public Task<ProductVisualizerDto> UpdateStock(Guid productId, int amount, Guid? orderId);
         /// <summary>
         /// Establece el stock mínimo de un producto.
         /// </summary>

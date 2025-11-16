@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using censudex_inventory_service_api.src.Helper.Exception;
 using censudex_inventory_service_api.src.Messages;
 using censudex_inventory_service_api.src.Service;
 using MassTransit;
+using MassTransit.SagaStateMachine;
 
 namespace censudex_inventory_service_api.src.Consumer
 {
@@ -33,12 +35,38 @@ namespace censudex_inventory_service_api.src.Consumer
         public async Task Consume(ConsumeContext<OrderCreatedMessage> context)
         {
             var orderEvent = context.Message;
-            foreach (var item in orderEvent.products)
+            var orderId = orderEvent.orderId;
+
+            try
             {
+                foreach (var item in orderEvent.products)
+                {
                 var productId = item.Key;
                 var quantity = item.Value;
-                await _productService.UpdateStock(productId, -quantity);
+                await _productService.UpdateStock(productId, -quantity, orderId);
+                }
             }
+            catch (ProductNotFoundException ex)
+            {
+                var orderFailedMessage = new OrderFailedStockMessage
+                {
+                    orderId = orderId,
+                    reason = ex.Message,
+                    errored = true,
+                    reportedAt = DateTime.UtcNow
+                };
+                Console.WriteLine($"Stock update failed for order {orderId}: {ex.Message}");
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine($"Failed to process order {orderId}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while processing order {orderId}: {ex.Message}");
+                throw;
+            }
+            
             return;
         }
     }
